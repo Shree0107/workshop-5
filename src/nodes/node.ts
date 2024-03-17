@@ -16,6 +16,29 @@ export async function node(
   node.use(express.json());
   node.use(bodyParser.json());
 
+
+  // Route to retrieve the current status of the node
+  node.get("/status", (req, res) => {
+    if (isFaulty) {
+      res.status(500).send("faulty");
+    } else {
+      res.status(200).send("live");
+    }
+  });
+
+  // Route to get the current state of a node
+  node.get("/getState", (req, res) => {
+    // Create NodeState object representing the current state of the node
+    const nodeState = {
+      killed: false, // Placeholder value for killed property
+      x: isFaulty ? null : initialValue, // Set consensus value to initialValue if node is not faulty
+      decided: null, // Placeholder value for decided property
+      k: null // Placeholder value for k property
+    };
+    // Respond with the current state of the node
+    res.json(nodeState);
+  });
+
   // TODO implement this
   // this route allows retrieving the current status of the node
   // node.get("/status", (req, res) => {});
